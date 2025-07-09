@@ -1,7 +1,6 @@
 
 import { Home, FileText, BookOpen, Edit3, Library, Globe } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -22,14 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-
-const navigationItems = [
-  { title: "Dashboard", url: "/", icon: Home },
-  { title: "Grant Autofill", url: "/grant-autofill", icon: FileText },
-  { title: "Story Recommendations", url: "/story-recommendations", icon: BookOpen },
-  { title: "Proposal Workspace", url: "/proposal-workspace", icon: Edit3 },
-  { title: "Story Library", url: "/story-library", icon: Library },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const languages = [
   { code: "en", name: "English" },
@@ -41,10 +33,18 @@ const languages = [
 
 export function AppSidebar() {
   const { state } = useSidebar();
-  const [selectedLanguage, setSelectedLanguage] = useState("en");
+  const { currentLanguage, setLanguage, t } = useLanguage();
   const isCollapsed = state === "collapsed";
 
-  const selectedLangName = languages.find(lang => lang.code === selectedLanguage)?.name || "English";
+  const navigationItems = [
+    { title: t("dashboard"), url: "/", icon: Home },
+    { title: t("grantAutofill"), url: "/grant-autofill", icon: FileText },
+    { title: t("storyRecommendations"), url: "/story-recommendations", icon: BookOpen },
+    { title: t("proposalWorkspace"), url: "/proposal-workspace", icon: Edit3 },
+    { title: t("storyLibrary"), url: "/story-library", icon: Library },
+  ];
+
+  const selectedLangName = languages.find(lang => lang.code === currentLanguage)?.name || "English";
 
   return (
     <Sidebar className={isCollapsed ? "w-14" : "w-64"} collapsible="icon">
@@ -71,7 +71,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {navigationItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.url}>
                   <SidebarMenuButton asChild>
                     <NavLink
                       to={item.url}
@@ -114,9 +114,9 @@ export function AppSidebar() {
                     {languages.map((language) => (
                       <DropdownMenuItem
                         key={language.code}
-                        onClick={() => setSelectedLanguage(language.code)}
+                        onClick={() => setLanguage(language.code)}
                         className={`cursor-pointer ${
-                          selectedLanguage === language.code
+                          currentLanguage === language.code
                             ? "bg-blue-50 text-blue-700"
                             : ""
                         }`}

@@ -1,117 +1,97 @@
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, BookOpen, Clock, Plus, Search } from "lucide-react";
-import { Link } from "react-router-dom";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { useLanguage } from "@/contexts/LanguageContext";
+
+const chartData = [
+  { month: "Jan", grants: 12 },
+  { month: "Feb", grants: 19 },
+  { month: "Mar", grants: 15 },
+  { month: "Apr", grants: 22 },
+  { month: "May", grants: 28 },
+  { month: "Jun", grants: 31 },
+];
 
 const Dashboard = () => {
-  const stats = [
-    {
-      title: "Active Grants",
-      value: "8",
-      icon: FileText,
-      color: "text-blue-600",
-      bgColor: "bg-blue-50",
-    },
-    {
-      title: "Stories Available",
-      value: "24",
-      icon: BookOpen,
-      color: "text-green-600",
-      bgColor: "bg-green-50",
-    },
-    {
-      title: "Hours Saved",
-      value: "156",
-      icon: Clock,
-      color: "text-purple-600",
-      bgColor: "bg-purple-50",
-    },
-  ];
-
-  const recentActivity = [
-    { action: "Grant application completed", funder: "Ford Foundation", time: "2 hours ago" },
-    { action: "Story added to library", title: "Youth Education Success", time: "1 day ago" },
-    { action: "Proposal workspace created", funder: "Gates Foundation", time: "2 days ago" },
-  ];
+  const { t } = useLanguage();
 
   return (
-    <div className="flex-1 bg-white">
-      <div className="border-b border-gray-200 bg-white px-6 py-4">
-        <div className="flex items-center gap-4">
-          <SidebarTrigger />
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-            <p className="text-gray-600">Welcome back! Here's your grant writing overview.</p>
+    <div className="p-8 bg-gray-50 min-h-screen">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">{t("dashboard")}</h1>
+        
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+            <h3 className="text-lg font-medium text-gray-900">{t("activeGrants")}</h3>
+            <p className="text-3xl font-bold text-blue-600 mt-2">12</p>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+            <h3 className="text-lg font-medium text-gray-900">{t("storiesAvailable")}</h3>
+            <p className="text-3xl font-bold text-green-600 mt-2">87</p>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+            <h3 className="text-lg font-medium text-gray-900">{t("hoursSaved")}</h3>
+            <p className="text-3xl font-bold text-purple-600 mt-2">156</p>
           </div>
         </div>
-      </div>
 
-      <div className="p-6 space-y-8">
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {stats.map((stat) => (
-            <Card key={stat.title} className="border border-gray-200">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                    <p className="text-3xl font-bold text-gray-900 mt-2">{stat.value}</p>
-                  </div>
-                  <div className={`p-3 rounded-lg ${stat.bgColor}`}>
-                    <stat.icon className={`w-6 h-6 ${stat.color}`} />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-8">
+          <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+            {t("startNewGrant")}
+          </button>
+          <button className="bg-white text-blue-600 border border-blue-600 px-6 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors">
+            {t("viewStoryMatches")}
+          </button>
         </div>
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="border border-gray-200">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-gray-900">Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Button asChild className="w-full bg-blue-600 hover:bg-blue-700">
-                <Link to="/grant-autofill" className="flex items-center gap-2">
-                  <Plus className="w-4 h-4" />
-                  Start New Grant
-                </Link>
-              </Button>
-              <Button asChild variant="outline" className="w-full border-gray-300">
-                <Link to="/story-recommendations" className="flex items-center gap-2">
-                  <Search className="w-4 h-4" />
-                  View Story Matches
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
+        {/* Chart and Recent Activity */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Chart */}
+          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Grant Applications by Month</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="grants" fill="#2563eb" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
 
           {/* Recent Activity */}
-          <Card className="border border-gray-200">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-gray-900">Recent Activity</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recentActivity.map((activity, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900">{activity.action}</p>
-                      <p className="text-sm text-gray-600">
-                        {activity.funder || activity.title}
-                      </p>
-                      <p className="text-xs text-gray-400 mt-1">{activity.time}</p>
-                    </div>
-                  </div>
-                ))}
+          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">{t("recentActivity")}</h3>
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                <div>
+                  <p className="text-sm text-gray-900">{t("grantSubmitted")}</p>
+                  <p className="text-xs text-gray-500">2 hours ago</p>
+                </div>
               </div>
-            </CardContent>
-          </Card>
+              
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                <div>
+                  <p className="text-sm text-gray-900">{t("storyAdded")}</p>
+                  <p className="text-xs text-gray-500">5 hours ago</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
+                <div>
+                  <p className="text-sm text-gray-900">{t("proposalDraft")}</p>
+                  <p className="text-xs text-gray-500">1 day ago</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
