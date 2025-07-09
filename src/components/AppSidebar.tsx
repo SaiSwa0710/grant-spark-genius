@@ -1,6 +1,7 @@
 
-import { Home, FileText, BookOpen, Edit3, Library, Menu } from "lucide-react";
+import { Home, FileText, BookOpen, Edit3, Library, Globe } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import { useState } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -14,6 +15,13 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 const navigationItems = [
   { title: "Dashboard", url: "/", icon: Home },
@@ -23,17 +31,29 @@ const navigationItems = [
   { title: "Story Library", url: "/story-library", icon: Library },
 ];
 
+const languages = [
+  { code: "en", name: "English" },
+  { code: "es", name: "Español" },
+  { code: "fr", name: "Français" },
+  { code: "de", name: "Deutsch" },
+  { code: "zh", name: "中文" },
+];
+
 export function AppSidebar() {
-  const { collapsed } = useSidebar();
+  const { state } = useSidebar();
+  const [selectedLanguage, setSelectedLanguage] = useState("en");
+  const isCollapsed = state === "collapsed";
+
+  const selectedLangName = languages.find(lang => lang.code === selectedLanguage)?.name || "English";
 
   return (
-    <Sidebar className={collapsed ? "w-14" : "w-64"} collapsible>
+    <Sidebar className={isCollapsed ? "w-14" : "w-64"} collapsible="icon">
       <SidebarHeader className="border-b border-gray-200 p-4">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-sm">GG</span>
           </div>
-          {!collapsed && (
+          {!isCollapsed && (
             <div>
               <h2 className="font-semibold text-gray-900">GrantGenius</h2>
               <p className="text-xs text-gray-500">Grant Writing Assistant</p>
@@ -45,7 +65,7 @@ export function AppSidebar() {
 
       <SidebarContent className="p-2">
         <SidebarGroup>
-          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>
+          <SidebarGroupLabel className={isCollapsed ? "sr-only" : ""}>
             Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -65,11 +85,48 @@ export function AppSidebar() {
                       }
                     >
                       <item.icon className="w-5 h-5" />
-                      {!collapsed && <span>{item.title}</span>}
+                      {!isCollapsed && <span>{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup className="mt-auto">
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className={`w-full justify-start gap-3 px-3 py-2 h-auto ${
+                        isCollapsed ? "px-2" : ""
+                      }`}
+                    >
+                      <Globe className="w-5 h-5" />
+                      {!isCollapsed && <span className="text-sm">{selectedLangName}</span>}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48 bg-white">
+                    {languages.map((language) => (
+                      <DropdownMenuItem
+                        key={language.code}
+                        onClick={() => setSelectedLanguage(language.code)}
+                        className={`cursor-pointer ${
+                          selectedLanguage === language.code
+                            ? "bg-blue-50 text-blue-700"
+                            : ""
+                        }`}
+                      >
+                        {language.name}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
