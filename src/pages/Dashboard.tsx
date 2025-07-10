@@ -1,6 +1,7 @@
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { GrantCalendar } from "@/components/GrantCalendar";
 
 const chartData = [
   { month: "Jan", grants: 12 },
@@ -45,6 +46,11 @@ const Dashboard = () => {
           <button className="bg-white text-blue-600 border border-blue-600 px-6 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors">
             {t("viewStoryMatches")}
           </button>
+        </div>
+
+        {/* Grant Calendar */}
+        <div className="mb-8">
+          <GrantCalendar />
         </div>
 
         {/* Chart and Recent Activity */}

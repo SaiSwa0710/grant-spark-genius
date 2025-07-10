@@ -24,11 +24,22 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const languages = [
+  { code: "ar", name: "العربية" },
+  { code: "bn", name: "বাংলা" },
+  { code: "de", name: "Deutsch" },
   { code: "en", name: "English" },
   { code: "es", name: "Español" },
+  { code: "fa", name: "فارسی" },
   { code: "fr", name: "Français" },
-  { code: "de", name: "Deutsch" },
+  { code: "hi", name: "हिन्दी" },
+  { code: "ja", name: "日本語" },
+  { code: "kar", name: "ကညီကျိာ်" },
+  { code: "ko", name: "한국어" },
+  { code: "pt", name: "Português" },
+  { code: "ru", name: "Русский" },
+  { code: "sw", name: "Kiswahili" },
   { code: "zh", name: "中文" },
+  { code: "zu", name: "isiZulu" },
 ];
 
 export function AppSidebar() {
